@@ -1,4 +1,4 @@
-# norad
+# holyship-ui
 
 Next.js 16 command center dashboard — real-time pipeline view for WOPR (DEFCON + RADAR).
 
@@ -60,7 +60,7 @@ src/
 
 ## Issue Tracking
 
-All issues in **Linear** (team: WOPR). Issue descriptions start with `**Repo:** wopr-network/norad`.
+All issues in **Linear** (team: WOPR). Issue descriptions start with `**Repo:** wopr-network/holyship-ui`.
 
 ## Version Control: Prefer jj
 

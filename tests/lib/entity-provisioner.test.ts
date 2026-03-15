@@ -16,9 +16,9 @@ function validateWorktreePathReal(base: string, subpath: string): string {
 vi.mock("@/lib/config", () => ({
 	DEFCON_URL: "http://localhost:3001",
 	DEFCON_ADMIN_TOKEN: "",
-	WORKTREE_BASE: "/tmp/norad-worktrees",
-	NORAD_REPO_PATH: "/repos/wopr",
-	requireNoradRepoPath: () => "/repos/wopr",
+	WORKTREE_BASE: "/tmp/holyship-worktrees",
+	HOLYSHIP_REPO_PATH: "/repos/wopr",
+	requireHolyshipRepoPath: () => "/repos/wopr",
 }));
 
 vi.mock("@/lib/defcon-client", () => ({
@@ -73,16 +73,16 @@ describe("provisionGitHubEntity", () => {
 			undefined,
 		);
 
-		expect(mockValidatePath).toHaveBeenCalledWith("/tmp/norad-worktrees", "feature/WOP-123");
+		expect(mockValidatePath).toHaveBeenCalledWith("/tmp/holyship-worktrees", "feature/WOP-123");
 
 		expect(mockCreateWorktree).toHaveBeenCalledWith(
 			"/repos/wopr",
 			"feature/WOP-123",
-			"/tmp/norad-worktrees/feature/WOP-123",
+			"/tmp/holyship-worktrees/feature/WOP-123",
 		);
 
 		expect(mockReportSignal).toHaveBeenCalledWith("e1", "provisioned", {
-			worktreePath: "/tmp/norad-worktrees/feature/WOP-123",
+			worktreePath: "/tmp/holyship-worktrees/feature/WOP-123",
 			branch: "feature/WOP-123",
 			repo: "wopr-network/wopr",
 		});
@@ -116,10 +116,10 @@ describe("cleanupEntityWorktree", () => {
 	});
 
 	it("removes the worktree", async () => {
-		await cleanupEntityWorktree("e1", "/tmp/norad-worktrees/feature/WOP-123", "/repos/wopr");
+		await cleanupEntityWorktree("e1", "/tmp/holyship-worktrees/feature/WOP-123", "/repos/wopr");
 		expect(mockRemoveWorktree).toHaveBeenCalledWith(
 			"/repos/wopr",
-			"/tmp/norad-worktrees/feature/WOP-123",
+			"/tmp/holyship-worktrees/feature/WOP-123",
 		);
 	});
 

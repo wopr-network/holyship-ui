@@ -18,7 +18,7 @@ export function Nav() {
           className="inline-block w-2 h-2 rounded-full animate-pulse-dot"
           style={{ background: "var(--accent-green)" }}
         />
-        NORAD
+        HOLY SHIP
       </Link>
       <nav className="flex items-center gap-6 ml-4">
         <NavLink href="/pipeline">Pipeline</NavLink>

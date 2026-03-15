@@ -1,5 +1,5 @@
 import path from "node:path";
-import { requireNoradRepoPath, WORKTREE_BASE } from "./config";
+import { requireHolyshipRepoPath, WORKTREE_BASE } from "./config";
 import { createEntity, type Entity, type EntityRefs, reportSignal } from "./defcon-client";
 import {
   createWorktree,
@@ -40,7 +40,7 @@ export async function provisionGitHubEntity(params: ProvisionParams): Promise<Pr
   const worktreePath = validateWorktreePath(WORKTREE_BASE, branch);
 
   try {
-    await createWorktree(requireNoradRepoPath(), branch, worktreePath);
+    await createWorktree(requireHolyshipRepoPath(), branch, worktreePath);
   } catch (err) {
     log.error(`worktree creation failed for entity ${entity.id}, signalling failure`, err);
     await reportSignal(entity.id, "failed", { error: String(err) });
@@ -55,7 +55,7 @@ export async function provisionGitHubEntity(params: ProvisionParams): Promise<Pr
     });
   } catch (err) {
     log.error(`reportSignal failed for entity ${entity.id}, removing orphaned worktree`, err);
-    await removeWorktree(requireNoradRepoPath(), worktreePath);
+    await removeWorktree(requireHolyshipRepoPath(), worktreePath);
     throw err;
   }
 
