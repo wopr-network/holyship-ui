@@ -4,7 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/ui/nav";
 
 export const metadata: Metadata = {
-  title: "NORAD — Command Center",
+  title: "Holy Ship — Command Center",
   description: "WOPR pipeline monitoring dashboard",
 };
 

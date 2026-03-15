@@ -7,8 +7,8 @@ vi.mock("node:child_process", () => ({
 
 // Mock config
 vi.mock("@/lib/config", () => ({
-	WORKTREE_BASE: "/tmp/norad-worktrees",
-	NORAD_REPO_PATH: "/repos/wopr",
+	WORKTREE_BASE: "/tmp/holyship-worktrees",
+	HOLYSHIP_REPO_PATH: "/repos/wopr",
 }));
 
 import { execFile } from "node:child_process";
@@ -18,19 +18,19 @@ const mockExecFile = vi.mocked(execFile);
 
 describe("validateWorktreePath", () => {
 	it("accepts a valid path under base", () => {
-		const result = validateWorktreePath("/tmp/norad-worktrees", "feature/WOP-123");
-		expect(result).toBe("/tmp/norad-worktrees/feature/WOP-123");
+		const result = validateWorktreePath("/tmp/holyship-worktrees", "feature/WOP-123");
+		expect(result).toBe("/tmp/holyship-worktrees/feature/WOP-123");
 	});
 
 	it("rejects path traversal", () => {
 		expect(() =>
-			validateWorktreePath("/tmp/norad-worktrees", "../../etc/passwd"),
+			validateWorktreePath("/tmp/holyship-worktrees", "../../etc/passwd"),
 		).toThrow("path traversal");
 	});
 
 	it("rejects absolute paths", () => {
 		expect(() =>
-			validateWorktreePath("/tmp/norad-worktrees", "/etc/passwd"),
+			validateWorktreePath("/tmp/holyship-worktrees", "/etc/passwd"),
 		).toThrow("path traversal");
 	});
 });
@@ -50,11 +50,11 @@ describe("createWorktree", () => {
 		await createWorktree(
 			"/repos/wopr",
 			"feature/WOP-123",
-			"/tmp/norad-worktrees/feature/WOP-123",
+			"/tmp/holyship-worktrees/feature/WOP-123",
 		);
 		expect(mockExecFile).toHaveBeenCalledWith(
 			"git",
-			["worktree", "add", "/tmp/norad-worktrees/feature/WOP-123", "-b", "feature/WOP-123"],
+			["worktree", "add", "/tmp/holyship-worktrees/feature/WOP-123", "-b", "feature/WOP-123"],
 			{ cwd: "/repos/wopr" },
 			expect.any(Function),
 		);
@@ -71,7 +71,7 @@ describe("createWorktree", () => {
 			createWorktree(
 				"/repos/wopr",
 				"feature/WOP-123",
-				"/tmp/norad-worktrees/feature/WOP-123",
+				"/tmp/holyship-worktrees/feature/WOP-123",
 			),
 		).rejects.toThrow("already exists");
 	});
@@ -89,10 +89,10 @@ describe("removeWorktree", () => {
 			return {} as ReturnType<typeof execFile>;
 		});
 
-		await removeWorktree("/repos/wopr", "/tmp/norad-worktrees/feature/WOP-123");
+		await removeWorktree("/repos/wopr", "/tmp/holyship-worktrees/feature/WOP-123");
 		expect(mockExecFile).toHaveBeenCalledWith(
 			"git",
-			["worktree", "remove", "--force", "/tmp/norad-worktrees/feature/WOP-123"],
+			["worktree", "remove", "--force", "/tmp/holyship-worktrees/feature/WOP-123"],
 			{ cwd: "/repos/wopr" },
 			expect.any(Function),
 		);
