@@ -1,4 +1,4 @@
-import { DEFCON_ADMIN_TOKEN, DEFCON_URL } from "./config";
+import { SILO_ADMIN_TOKEN, SILO_URL, WOPR_TENANT_ID } from "./config";
 import { logger } from "./logger";
 
 const log = logger("defcon-client");
@@ -56,17 +56,20 @@ export interface DefconStatus {
 }
 
 function authHeaders(): Record<string, string> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (DEFCON_ADMIN_TOKEN) {
-    headers.Authorization = `Bearer ${DEFCON_ADMIN_TOKEN}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "X-Tenant-Id": WOPR_TENANT_ID,
+  };
+  if (SILO_ADMIN_TOKEN) {
+    headers.Authorization = `Bearer ${SILO_ADMIN_TOKEN}`;
   }
   return headers;
 }
 
 function resolveUrl(path: string): string {
-  // Server-side: call DEFCON directly. Browser-side: proxy through Next.js API route.
+  // Server-side: call silo directly. Browser-side: proxy through Next.js API route.
   if (typeof window === "undefined") {
-    return `${DEFCON_URL}${path}`;
+    return `${SILO_URL}${path}`;
   }
   // path is like /api/status or /api/entities?... — strip /api/ prefix for proxy route
   return path.replace(/^\/api\//, "/api/defcon/");
@@ -74,6 +77,7 @@ function resolveUrl(path: string): string {
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   const url = resolveUrl(path);
+  const method = init?.method ?? "GET";
   const isServerSide = typeof window === "undefined";
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000);
@@ -88,12 +92,15 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
       next: { revalidate: 0 },
     });
     if (!res.ok) {
-      log.error(`GET ${url} → ${res.status}`);
+      log.error(`${method} ${url} → ${res.status}`);
       throw new Error(`DEFCON ${res.status}: ${path}`);
+    }
+    if (res.status === 204 || res.headers.get("content-length") === "0") {
+      return undefined as T;
     }
     return res.json() as Promise<T>;
   } catch (error) {
-    log.error(`GET ${url} failed`, error);
+    log.error(`${method} ${url} failed`, error);
     throw error;
   } finally {
     clearTimeout(timeoutId);
@@ -123,7 +130,7 @@ export async function createEntity(
   refs?: EntityRefs,
   payload?: Record<string, unknown>,
 ): Promise<Entity> {
-  const url = `${DEFCON_URL}/api/entities`;
+  const url = `${SILO_URL}/api/entities`;
   const body: Record<string, unknown> = { flow: flowName };
   if (refs) body.refs = refs;
   if (payload) body.payload = payload;
@@ -145,7 +152,7 @@ export async function reportSignal(
   signal: string,
   artifacts?: Record<string, unknown>,
 ): Promise<void> {
-  const url = `${DEFCON_URL}/api/entities/${encodeURIComponent(entityId)}/report`;
+  const url = `${SILO_URL}/api/entities/${encodeURIComponent(entityId)}/report`;
   const body: Record<string, unknown> = { signal };
   if (artifacts) body.artifacts = artifacts;
 
@@ -158,4 +165,67 @@ export async function reportSignal(
     log.error(`POST ${url} → ${res.status}`);
     throw new Error(`DEFCON ${res.status}: POST /api/entities/${entityId}/report`);
   }
+}
+
+// ─── Integrations ───────────────────────────────────────────────────────────
+
+export type IntegrationCategory = "issue_tracker" | "vcs";
+export type IntegrationProvider = "linear" | "jira" | "github_issues" | "github" | "gitlab";
+
+export interface IntegrationCredentials {
+  provider: IntegrationProvider;
+  accessToken: string;
+  installationId?: number;
+  workspaceId?: string;
+  cloudId?: string;
+  baseUrl?: string;
+}
+
+export interface Integration {
+  id: string;
+  tenantId: string;
+  name: string;
+  category: IntegrationCategory;
+  provider: IntegrationProvider;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function listIntegrations(category?: IntegrationCategory): Promise<Integration[]> {
+  const qs = category ? `?category=${encodeURIComponent(category)}` : "";
+  const data = await fetchJson<{ integrations: Integration[] }>(`/api/admin/integrations${qs}`);
+  return data.integrations;
+}
+
+export async function createIntegration(payload: {
+  name: string;
+  category: IntegrationCategory;
+  provider: IntegrationProvider;
+  credentials: IntegrationCredentials;
+}): Promise<Integration> {
+  const data = await fetchJson<{ integration: Integration }>("/api/admin/integrations", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+  return data.integration;
+}
+
+export async function updateIntegrationCredentials(
+  id: string,
+  credentials: IntegrationCredentials,
+): Promise<Integration> {
+  const data = await fetchJson<{ integration: Integration }>(
+    `/api/admin/integrations/${encodeURIComponent(id)}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ credentials }),
+    },
+  );
+  return data.integration;
+}
+
+export async function deleteIntegration(id: string): Promise<void> {
+  await fetchJson<unknown>(`/api/admin/integrations/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
 }
