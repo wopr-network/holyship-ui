@@ -130,7 +130,7 @@ export async function createEntity(
   refs?: EntityRefs,
   payload?: Record<string, unknown>,
 ): Promise<Entity> {
-  const url = `${DEFCON_URL}/api/entities`;
+  const url = `${SILO_URL}/api/entities`;
   const body: Record<string, unknown> = { flow: flowName };
   if (refs) body.refs = refs;
   if (payload) body.payload = payload;
@@ -152,7 +152,7 @@ export async function reportSignal(
   signal: string,
   artifacts?: Record<string, unknown>,
 ): Promise<void> {
-  const url = `${DEFCON_URL}/api/entities/${encodeURIComponent(entityId)}/report`;
+  const url = `${SILO_URL}/api/entities/${encodeURIComponent(entityId)}/report`;
   const body: Record<string, unknown> = { signal };
   if (artifacts) body.artifacts = artifacts;
 

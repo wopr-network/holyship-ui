@@ -80,15 +80,19 @@ export async function GET(req: NextRequest) {
   const existing = await listIntegrations("issue_tracker").catch(() => []);
   const current = existing.find((i) => i.provider === "linear");
 
-  if (current) {
-    await updateIntegrationCredentials(current.id, credentials);
-  } else {
-    await createIntegration({
-      name: "Linear",
-      category: "issue_tracker",
-      provider: "linear",
-      credentials,
-    });
+  try {
+    if (current) {
+      await updateIntegrationCredentials(current.id, credentials);
+    } else {
+      await createIntegration({
+        name: "Linear",
+        category: "issue_tracker",
+        provider: "linear",
+        credentials,
+      });
+    }
+  } catch {
+    return NextResponse.redirect(`${APP_URL}/settings/integrations?error=save_failed`);
   }
 
   return NextResponse.redirect(`${APP_URL}/settings/integrations?connected=linear`);
