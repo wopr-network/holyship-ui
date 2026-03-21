@@ -240,37 +240,37 @@ function IntegrationCard({
               )}
               <div className="flex items-center gap-2">
                 <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Paste API key…"
-                className="flex-1 text-xs px-3 py-1.5 rounded bg-transparent outline-none"
-                style={{ border: "1px solid var(--border)", color: "var(--foreground)" }}
-                // biome-ignore lint/a11y/noAutofocus: intentional focus on reveal
-                autoFocus
-              />
-              <button
-                type="button"
-                onClick={handleSaveApiKey}
-                disabled={saving || !apiKey.trim()}
-                className="text-xs px-3 py-1.5 rounded font-bold"
-                style={{ background: "var(--accent-green)", color: "#000" }}
-              >
-                {saving ? "Saving…" : "Save"}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowKeyInput(false);
-                  setApiKey("");
-                  setSaveError(null);
-                }}
-                className="text-xs px-3 py-1.5 rounded"
-                style={{ color: "var(--muted-foreground)" }}
-              >
-                Cancel
-              </button>
-            </div>
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="Paste API key…"
+                  className="flex-1 text-xs px-3 py-1.5 rounded bg-transparent outline-none"
+                  style={{ border: "1px solid var(--border)", color: "var(--foreground)" }}
+                  // biome-ignore lint/a11y/noAutofocus: intentional focus on reveal
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={handleSaveApiKey}
+                  disabled={saving || !apiKey.trim()}
+                  className="text-xs px-3 py-1.5 rounded font-bold"
+                  style={{ background: "var(--accent-green)", color: "#000" }}
+                >
+                  {saving ? "Saving…" : "Save"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowKeyInput(false);
+                    setApiKey("");
+                    setSaveError(null);
+                  }}
+                  className="text-xs px-3 py-1.5 rounded"
+                  style={{ color: "var(--muted-foreground)" }}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           ) : (
             <button

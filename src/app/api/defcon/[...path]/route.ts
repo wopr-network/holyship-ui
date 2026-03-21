@@ -65,7 +65,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ pa
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ path: string[] }> }) {
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ path: string[] }> },
+) {
   const { path } = await params;
   const url = `${SILO_URL}/api/${path.map(encodeURIComponent).join("/")}`;
 

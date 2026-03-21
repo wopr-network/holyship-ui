@@ -77,6 +77,7 @@ function resolveUrl(path: string): string {
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   const url = resolveUrl(path);
+  const method = init?.method ?? "GET";
   const isServerSide = typeof window === "undefined";
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 10_000);
@@ -91,7 +92,7 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
       next: { revalidate: 0 },
     });
     if (!res.ok) {
-      log.error(`GET ${url} → ${res.status}`);
+      log.error(`${method} ${url} → ${res.status}`);
       throw new Error(`DEFCON ${res.status}: ${path}`);
     }
     if (res.status === 204 || res.headers.get("content-length") === "0") {
@@ -99,7 +100,7 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
     }
     return res.json() as Promise<T>;
   } catch (error) {
-    log.error(`GET ${url} failed`, error);
+    log.error(`${method} ${url} failed`, error);
     throw error;
   } finally {
     clearTimeout(timeoutId);
@@ -204,7 +205,7 @@ export async function createIntegration(payload: {
 }): Promise<Integration> {
   const data = await fetchJson<{ integration: Integration }>("/api/admin/integrations", {
     method: "POST",
-    body: JSON.stringify({ ...payload, tenant_id: WOPR_TENANT_ID }),
+    body: JSON.stringify(payload),
   });
   return data.integration;
 }

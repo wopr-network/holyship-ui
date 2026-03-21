@@ -56,15 +56,19 @@ export async function GET(req: NextRequest) {
     ...(installationId ? { installationId: Number(installationId) } : {}),
   };
 
-  if (current) {
-    await updateIntegrationCredentials(current.id, credentials);
-  } else {
-    await createIntegration({
-      name: "GitHub",
-      category: "vcs",
-      provider: "github",
-      credentials,
-    });
+  try {
+    if (current) {
+      await updateIntegrationCredentials(current.id, credentials);
+    } else {
+      await createIntegration({
+        name: "GitHub",
+        category: "vcs",
+        provider: "github",
+        credentials,
+      });
+    }
+  } catch {
+    return NextResponse.redirect(`${APP_URL}/settings/integrations?error=save_failed`);
   }
 
   return NextResponse.redirect(`${APP_URL}/settings/integrations?connected=github`);
