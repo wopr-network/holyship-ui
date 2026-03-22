@@ -1,2 +1,2 @@
 "use client";
-export * from "@core/app/instances/error";
+export { default } from "@core/app/instances/error";

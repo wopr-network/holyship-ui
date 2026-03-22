@@ -1,2 +1,2 @@
 "use client";
-export * from "@core/app/fleet/error";
+export { default } from "@core/app/fleet/error";
