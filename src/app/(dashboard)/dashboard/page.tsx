@@ -1,17 +1,39 @@
 import { ConnectRepos } from "@/components/onboarding/connect-repos";
 import { PipelineBoard } from "@/components/pipeline/pipeline-board";
-import type { Entity } from "@/lib/holyship-client";
+import type { Entity, Flow } from "@/lib/holyship-client";
 import { getEntitiesByState, getFlows, getHolyshipStatus } from "@/lib/holyship-client";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Synthesize Flow objects from status response when /api/flows doesn't exist.
+ * Status returns { flows: { [flowId]: { [stateName]: count } } }
+ */
+function flowsFromStatus(statusFlows: Record<string, Record<string, number>>): Flow[] {
+  return Object.entries(statusFlows).map(([id, states]) => ({
+    id,
+    name: id,
+    states: Object.keys(states).map((name) => ({ id: name, name })),
+    transitions: [],
+  }));
+}
+
 export default async function DashboardPage() {
-  let flows = [] as Awaited<ReturnType<typeof getFlows>>;
-  let counts = {} as Record<string, Record<string, number>>;
+  let flows: Flow[] = [];
+  let counts: Record<string, Record<string, number>> = {};
   const entityMap: Record<string, Entity[]> = {};
 
   try {
-    [flows, { flows: counts }] = await Promise.all([getFlows(), getHolyshipStatus()]);
+    const status = await getHolyshipStatus();
+    counts = status.flows;
+
+    // Try to get full flow definitions; fall back to synthesizing from status
+    try {
+      flows = await getFlows();
+    } catch {
+      flows = flowsFromStatus(counts);
+    }
+
     await Promise.all(
       flows.flatMap((flow) =>
         flow.states.map(async (state) => {
