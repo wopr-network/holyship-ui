@@ -11,14 +11,15 @@ export interface FlowState {
 }
 
 export interface FlowTransition {
-  from: string;
-  to: string;
-  on?: string;
+  fromState: string;
+  toState: string;
+  trigger?: string;
 }
 
 export interface Flow {
   id: string;
   name: string;
+  initialState?: string;
   states: FlowState[];
   transitions: FlowTransition[];
 }

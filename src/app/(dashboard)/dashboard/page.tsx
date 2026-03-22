@@ -24,13 +24,15 @@ export default async function DashboardPage() {
   const entityMap: Record<string, Entity[]> = {};
 
   try {
-    const status = await getHolyshipStatus();
-    counts = status.flows;
+    const [statusResult, flowsResult] = await Promise.allSettled([getHolyshipStatus(), getFlows()]);
 
-    // Try to get full flow definitions; fall back to synthesizing from status
-    try {
-      flows = await getFlows();
-    } catch {
+    if (statusResult.status === "fulfilled") {
+      counts = statusResult.value.flows;
+    }
+
+    if (flowsResult.status === "fulfilled") {
+      flows = flowsResult.value;
+    } else {
       flows = flowsFromStatus(counts);
     }
 
