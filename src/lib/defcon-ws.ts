@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { SILO_WS_TOKEN, SILO_WS_URL } from "./config";
+import { HOLYSHIP_WS_TOKEN, HOLYSHIP_WS_URL } from "./config";
 import { logger } from "./logger";
 
 const log = logger("defcon-ws");
@@ -18,11 +18,11 @@ export interface DefconEvent {
 }
 
 function getWsUrl(): string {
-  if (!SILO_WS_URL) return "";
-  if (SILO_WS_TOKEN) {
-    return `${SILO_WS_URL}?token=${encodeURIComponent(SILO_WS_TOKEN)}`;
+  if (!HOLYSHIP_WS_URL) return "";
+  if (HOLYSHIP_WS_TOKEN) {
+    return `${HOLYSHIP_WS_URL}?token=${encodeURIComponent(HOLYSHIP_WS_TOKEN)}`;
   }
-  return SILO_WS_URL;
+  return HOLYSHIP_WS_URL;
 }
 
 export type DefconConnectionStatus = "connecting" | "open" | "closed" | "error";
@@ -45,11 +45,11 @@ export function useDefconEvents(
       if (destroyed) return;
       const url = getWsUrl();
       if (!url) {
-        log.warn("NEXT_PUBLIC_SILO_WS_URL not set — WebSocket disabled");
+        log.warn("NEXT_PUBLIC_HOLYSHIP_WS_URL not set — WebSocket disabled");
         statusHandlerRef.current?.("closed");
         return;
       }
-      log.info("connecting to", SILO_WS_URL || "(not set)");
+      log.info("connecting to", HOLYSHIP_WS_URL || "(not set)");
       statusHandlerRef.current?.("connecting");
       ws = new WebSocket(url);
 

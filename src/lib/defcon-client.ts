@@ -1,4 +1,4 @@
-import { SILO_ADMIN_TOKEN, SILO_URL, WOPR_TENANT_ID } from "./config";
+import { HOLYSHIP_API_TOKEN, HOLYSHIP_API_URL, WOPR_TENANT_ID } from "./config";
 import { logger } from "./logger";
 
 const log = logger("defcon-client");
@@ -60,8 +60,8 @@ function authHeaders(): Record<string, string> {
     "Content-Type": "application/json",
     "X-Tenant-Id": WOPR_TENANT_ID,
   };
-  if (SILO_ADMIN_TOKEN) {
-    headers.Authorization = `Bearer ${SILO_ADMIN_TOKEN}`;
+  if (HOLYSHIP_API_TOKEN) {
+    headers.Authorization = `Bearer ${HOLYSHIP_API_TOKEN}`;
   }
   return headers;
 }
@@ -69,7 +69,7 @@ function authHeaders(): Record<string, string> {
 function resolveUrl(path: string): string {
   // Server-side: call silo directly. Browser-side: proxy through Next.js API route.
   if (typeof window === "undefined") {
-    return `${SILO_URL}${path}`;
+    return `${HOLYSHIP_API_URL}${path}`;
   }
   // path is like /api/status or /api/entities?... — strip /api/ prefix for proxy route
   return path.replace(/^\/api\//, "/api/defcon/");
@@ -130,7 +130,7 @@ export async function createEntity(
   refs?: EntityRefs,
   payload?: Record<string, unknown>,
 ): Promise<Entity> {
-  const url = `${SILO_URL}/api/entities`;
+  const url = `${HOLYSHIP_API_URL}/api/entities`;
   const body: Record<string, unknown> = { flow: flowName };
   if (refs) body.refs = refs;
   if (payload) body.payload = payload;
@@ -152,7 +152,7 @@ export async function reportSignal(
   signal: string,
   artifacts?: Record<string, unknown>,
 ): Promise<void> {
-  const url = `${SILO_URL}/api/entities/${encodeURIComponent(entityId)}/report`;
+  const url = `${HOLYSHIP_API_URL}/api/entities/${encodeURIComponent(entityId)}/report`;
   const body: Record<string, unknown> = { signal };
   if (artifacts) body.artifacts = artifacts;
 
