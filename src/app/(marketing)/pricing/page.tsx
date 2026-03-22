@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FadeIn } from "@/components/landing";
 
 export default function PricingPage() {
@@ -101,12 +102,12 @@ export default function PricingPage() {
             <span className="text-signal-orange">Holy Ship.</span>
           </p>
 
-          <a
+          <Link
             href="/login"
             className="mt-12 inline-block px-8 py-4 bg-signal-orange text-near-black font-semibold text-lg rounded hover:opacity-90 transition-opacity"
           >
             Get Started — it's free
-          </a>
+          </Link>
         </section>
       </FadeIn>
     </>
