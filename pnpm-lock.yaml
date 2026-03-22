@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@wopr-network/platform-ui-core':
-        specifier: 1.18.2
-        version: 1.18.2(@babel/core@7.29.0)(@playwright/test@1.58.2)(@trpc/server@11.14.1(typescript@5.9.3))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(mongodb@7.1.0)(react-is@16.13.1)(redux@5.0.1)(typescript@5.9.3)(vitest@4.0.18(@types/node@20.19.37)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.14(@types/node@20.19.37)(typescript@5.9.3)))
+        specifier: 1.18.4
+        version: 1.18.4(@babel/core@7.29.0)(@playwright/test@1.58.2)(@trpc/server@11.14.1(typescript@5.9.3))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(mongodb@7.1.0)(react-is@16.13.1)(redux@5.0.1)(typescript@5.9.3)(vitest@4.0.18(@types/node@20.19.37)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.14(@types/node@20.19.37)(typescript@5.9.3)))
       better-auth:
         specifier: ^1.5.5
         version: 1.5.5(mongodb@7.1.0)(next@16.1.6(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vitest@4.0.18(@types/node@20.19.37)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.14(@types/node@20.19.37)(typescript@5.9.3)))
@@ -1975,8 +1975,8 @@ packages:
   '@vitest/utils@4.0.18':
     resolution: {integrity: sha512-msMRKLMVLWygpK3u2Hybgi4MNjcYJvwTb0Ru09+fOyCXIgT5raYP041DRRdiJiI3k/2U6SEbAETB3YtBrUkCFA==}
 
-  '@wopr-network/platform-ui-core@1.18.2':
-    resolution: {integrity: sha512-DUxsDsXyC3GSAD5j17xEyl+K87/1ok4atR1diGqriAOWGM0S7QB8pB8yEfqLclLhs27HrBPBhorPdquBd1sHJw==}
+  '@wopr-network/platform-ui-core@1.18.4':
+    resolution: {integrity: sha512-T0OkF7B4od/98U5X97rrfsAfaa59L35HqHXFsW/0fX2U571YN0TsjCDicZ/xt9aiIN77ellckFjNSbu9q69QQQ==}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -5810,7 +5810,7 @@ snapshots:
       '@vitest/pretty-format': 4.0.18
       tinyrainbow: 3.0.3
 
-  '@wopr-network/platform-ui-core@1.18.2(@babel/core@7.29.0)(@playwright/test@1.58.2)(@trpc/server@11.14.1(typescript@5.9.3))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(mongodb@7.1.0)(react-is@16.13.1)(redux@5.0.1)(typescript@5.9.3)(vitest@4.0.18(@types/node@20.19.37)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.14(@types/node@20.19.37)(typescript@5.9.3)))':
+  '@wopr-network/platform-ui-core@1.18.4(@babel/core@7.29.0)(@playwright/test@1.58.2)(@trpc/server@11.14.1(typescript@5.9.3))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(mongodb@7.1.0)(react-is@16.13.1)(redux@5.0.1)(typescript@5.9.3)(vitest@4.0.18(@types/node@20.19.37)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.14(@types/node@20.19.37)(typescript@5.9.3)))':
     dependencies:
       '@hookform/resolvers': 5.2.2(react-hook-form@7.71.2(react@19.2.3))
       '@noble/hashes': 2.0.1
