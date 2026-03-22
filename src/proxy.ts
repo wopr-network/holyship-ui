@@ -3,9 +3,14 @@ import { logger } from "@/lib/logger";
 
 const log = logger("middleware");
 
-const apiOrigin = process.env.NEXT_PUBLIC_API_URL
-  ? new URL(process.env.NEXT_PUBLIC_API_URL).origin
-  : "";
+let apiOrigin = "";
+if (process.env.NEXT_PUBLIC_API_URL) {
+  try {
+    apiOrigin = new URL(process.env.NEXT_PUBLIC_API_URL).origin;
+  } catch {
+    apiOrigin = "";
+  }
+}
 
 const isSecureOrigin = process.env.NODE_ENV === "production";
 
