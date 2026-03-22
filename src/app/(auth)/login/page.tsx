@@ -1,7 +1,5 @@
 "use client";
 
-import { Github } from "lucide-react";
-import { Suspense, useState } from "react";
 import { AuthRedirect } from "@core/components/auth/auth-redirect";
 import { Button } from "@core/components/ui/button";
 import {
@@ -13,6 +11,8 @@ import {
 } from "@core/components/ui/card";
 import { signIn } from "@core/lib/auth-client";
 import { getBrandConfig } from "@core/lib/brand-config";
+import { Github } from "lucide-react";
+import { Suspense, useState } from "react";
 
 function LoginContent() {
   const brand = getBrandConfig();
@@ -54,7 +54,7 @@ function LoginContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center" />}>
       <LoginContent />
     </Suspense>
   );
