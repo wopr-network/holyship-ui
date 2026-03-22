@@ -24,5 +24,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/holyship-platform-ui:latest
-            ghcr.io/${{ github.repository_owner }}/holyship-platform-ui:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/holyship-ui:latest
+            ghcr.io/${{ github.repository_owner }}/holyship-ui:${{ github.sha }}
