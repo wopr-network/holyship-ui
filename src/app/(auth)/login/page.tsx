@@ -33,10 +33,11 @@ function LoginContent() {
   async function handleGitHubLogin() {
     setLoading(true);
     try {
+      const origin = window.location.origin;
       await signIn.social({
         provider: "github",
-        callbackURL: callbackUrl ?? brand.homePath,
-        errorCallbackURL: "/login",
+        callbackURL: `${origin}${callbackUrl ?? brand.homePath}`,
+        errorCallbackURL: `${origin}/login`,
       });
     } catch {
       setLoading(false);
