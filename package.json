@@ -13,7 +13,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@wopr-network/platform-ui-core": "1.18.2",
+    "@wopr-network/platform-ui-core": "1.18.4",
     "better-auth": "^1.5.5",
     "framer-motion": "^12.38.0",
     "geist": "^1.7.0",
