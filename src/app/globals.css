@@ -35,3 +35,10 @@ html:root {
   --primary-foreground: #ffffff;
   --ring: #ff6600;
 }
+
+/* Holy Ship brand palette — used by custom landing page */
+@theme {
+  --color-signal-orange: #ff6200;
+  --color-near-black: #0a0a0a;
+  --color-off-white: #fafafa;
+}
