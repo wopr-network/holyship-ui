@@ -1,6 +1,5 @@
 "use client";
 
-import { AuthRedirect } from "@core/components/auth/auth-redirect";
 import { Button } from "@core/components/ui/button";
 import {
   Card,
@@ -9,11 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@core/components/ui/card";
-import { signIn } from "@core/lib/auth-client";
 import { getBrandConfig } from "@core/lib/brand-config";
 import { GithubIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import { AuthRedirect } from "@/components/auth/auth-redirect";
+import { signIn } from "@/lib/auth-client";
 
 const ERROR_MESSAGES: Record<string, string> = {
   email_not_found: "No account found for that email. Contact support to get started.",
