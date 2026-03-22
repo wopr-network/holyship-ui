@@ -1,75 +1,113 @@
-import { ConnectRepos } from "@/components/onboarding/connect-repos";
-import { PipelineBoard } from "@/components/pipeline/pipeline-board";
-import type { Entity, Flow } from "@/lib/holyship-client";
-import { getEntitiesByState, getFlows, getHolyshipStatus } from "@/lib/holyship-client";
+"use client";
 
-export const dynamic = "force-dynamic";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { RepoCard } from "@/components/repo/repo-card";
+import { getRepoConfig } from "@/lib/holyship-client";
+import type { RepoSummary } from "@/lib/types";
 
-/**
- * Synthesize Flow objects from status response when /api/flows doesn't exist.
- * Status returns { flows: { [flowId]: { [stateName]: count } } }
- */
-function flowsFromStatus(statusFlows: Record<string, Record<string, number>>): Flow[] {
-  return Object.entries(statusFlows).map(([id, states]) => ({
-    id,
-    name: id,
-    states: Object.keys(states).map((name) => ({ id: name, name })),
-    transitions: [],
-  }));
-}
+export default function DashboardPage() {
+  const [repos, setRepos] = useState<RepoSummary[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default async function DashboardPage() {
-  let flows: Flow[] = [];
-  let counts: Record<string, Record<string, number>> = {};
-  const entityMap: Record<string, Entity[]> = {};
+  useEffect(() => {
+    let cancelled = false;
 
-  try {
-    const [statusResult, flowsResult] = await Promise.allSettled([getHolyshipStatus(), getFlows()]);
+    async function load() {
+      try {
+        const res = await fetch("/api/github/repos");
+        const data = await res.json();
+        const raw: { id: number; full_name: string; name: string }[] = data.repositories ?? [];
 
-    if (statusResult.status === "fulfilled") {
-      counts = statusResult.value.flows;
+        const enriched = await Promise.all(
+          raw.map(async (r) => {
+            const [owner, repo] = r.full_name.split("/");
+            const configResult = await getRepoConfig(owner, repo);
+            const analyzed = configResult !== null;
+            return {
+              id: r.id,
+              full_name: r.full_name,
+              name: r.name,
+              analyzed,
+              config: configResult?.config ?? null,
+              inFlight: 0,
+              shippedToday: 0,
+              openGaps: 0,
+            } satisfies RepoSummary;
+          }),
+        );
+
+        if (!cancelled) {
+          setRepos(enriched);
+        }
+      } catch {
+        // leave repos empty
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
     }
 
-    if (flowsResult.status === "fulfilled") {
-      flows = flowsResult.value;
-    } else {
-      flows = flowsFromStatus(counts);
-    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-    await Promise.all(
-      flows.flatMap((flow) =>
-        flow.states.map(async (state) => {
-          const key = `${flow.id}::${state.name}`;
-          try {
-            entityMap[key] = await getEntitiesByState(flow.name, state.name);
-          } catch {
-            entityMap[key] = [];
-          }
-        }),
-      ),
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-6">Your Repos</h1>
+        <p className="text-muted-foreground">Loading repos...</p>
+      </div>
     );
-  } catch {
-    // API unreachable — show onboarding
   }
 
-  if (flows.length === 0) {
-    return <ConnectRepos />;
+  if (repos.length === 0) {
+    return (
+      <div className="container mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-6">Your Repos</h1>
+        <div className="rounded-lg border-2 border-dashed border-primary/40 p-10 text-center">
+          <h2 className="text-2xl font-bold mb-2">No repos connected</h2>
+          <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+            Install the Holy Ship GitHub App to start shipping issues automatically.
+          </p>
+          <a
+            href="/connect"
+            className="inline-block rounded-lg bg-primary px-8 py-3 font-bold text-primary-foreground hover:bg-primary/90 transition-opacity"
+          >
+            Connect GitHub
+          </a>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <div className="px-6 pt-5 pb-0 flex items-center gap-3">
-        <h1
-          className="text-sm font-bold tracking-[0.3em] uppercase"
-          style={{ color: "var(--foreground)" }}
+    <div className="container mx-auto p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Your Repos</h1>
+        <Link
+          href="/connect"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-opacity"
         >
-          Pipeline
-        </h1>
-        <span className="text-xs tracking-wider" style={{ color: "var(--muted-foreground)" }}>
-          / entity board
-        </span>
+          + Connect Repo
+        </Link>
       </div>
-      <PipelineBoard initial={{ flows, entityMap, counts }} />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {repos.map((repo) => (
+          <RepoCard key={repo.id} repo={repo} />
+        ))}
+
+        <Link
+          href="/connect"
+          className="flex items-center justify-center rounded-xl border-2 border-dashed border-border p-8 text-muted-foreground hover:border-primary/30 hover:text-primary transition-colors"
+        >
+          <span className="text-3xl font-light">+</span>
+        </Link>
+      </div>
     </div>
   );
 }
