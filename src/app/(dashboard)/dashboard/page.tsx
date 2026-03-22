@@ -1,1 +1,1 @@
-export { default } from "@core/app/(dashboard)/dashboard/page";
+export { default } from "../pipeline/page";

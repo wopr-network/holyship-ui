@@ -186,7 +186,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users from "/" to the app subdomain if on the marketing domain.
-  // On the app subdomain, redirect to /pipeline. On the base domain, redirect to app subdomain.
+  // On the app subdomain, redirect to /dashboard. On the base domain, redirect to app subdomain.
   // NOTE: This check requires the Better Auth server to set the session cookie with
   // domain=".<base-domain>" so it is visible on both the app and marketing subdomains.
   // See: wopr-platform/src/auth/better-auth.ts advanced.cookies.session_token.attributes.domain
@@ -199,10 +199,10 @@ export default async function middleware(request: NextRequest) {
         process.env.NEXT_PUBLIC_BRAND_APP_DOMAIN || process.env.NEXT_PUBLIC_APP_DOMAIN;
       if (appDomain && !host.startsWith("app.")) {
         // On marketing domain — redirect to the app subdomain
-        return withCsp(NextResponse.redirect(new URL(`https://${appDomain}/pipeline`)));
+        return withCsp(NextResponse.redirect(new URL(`https://${appDomain}/dashboard`)));
       }
-      // On app subdomain (or no configured app domain) — redirect to /pipeline
-      return withCsp(NextResponse.redirect(new URL("/pipeline", request.url)));
+      // On app subdomain (or no configured app domain) — redirect to /dashboard
+      return withCsp(NextResponse.redirect(new URL("/dashboard", request.url)));
     }
   }
 
@@ -216,7 +216,7 @@ export default async function middleware(request: NextRequest) {
     if (sessionCookie?.value.trim()) {
       const role = await getSessionRole(request);
       if (role !== "platform_admin") {
-        return withCsp(NextResponse.redirect(new URL("/pipeline", request.url)));
+        return withCsp(NextResponse.redirect(new URL("/dashboard", request.url)));
       }
       // Admin confirmed — serve page with anti-cache headers so revocation
       // is detected on the very next navigation (browser must revalidate).
