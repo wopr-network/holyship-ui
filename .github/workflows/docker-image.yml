@@ -23,6 +23,15 @@ jobs:
         with:
           context: .
           push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'https://api.holyship.wtf' }}
+            NEXT_PUBLIC_BRAND_NAME=${{ vars.NEXT_PUBLIC_BRAND_NAME || 'Holy Ship' }}
+            NEXT_PUBLIC_BRAND_PRODUCT_NAME=${{ vars.NEXT_PUBLIC_BRAND_PRODUCT_NAME || 'Holy Ship' }}
+            NEXT_PUBLIC_BRAND_DOMAIN=${{ vars.NEXT_PUBLIC_BRAND_DOMAIN || 'holyship.wtf' }}
+            NEXT_PUBLIC_BRAND_TAGLINE=${{ vars.NEXT_PUBLIC_BRAND_TAGLINE || 'Its what you will say when you see the results.' }}
+            NEXT_PUBLIC_BRAND_HOME_PATH=${{ vars.NEXT_PUBLIC_BRAND_HOME_PATH || '/dashboard' }}
+            NEXT_PUBLIC_BRAND_STORAGE_PREFIX=${{ vars.NEXT_PUBLIC_BRAND_STORAGE_PREFIX || 'holyship' }}
+            NEXT_PUBLIC_GITHUB_APP_URL=${{ vars.NEXT_PUBLIC_GITHUB_APP_URL || 'https://github.com/apps/holy-ship' }}
           tags: |
             ghcr.io/${{ github.repository_owner }}/holyship-ui:latest
             ghcr.io/${{ github.repository_owner }}/holyship-ui:${{ github.sha }}
