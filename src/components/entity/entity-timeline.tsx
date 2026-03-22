@@ -1,4 +1,4 @@
-import { Badge, stateVariant } from "@/components/ui/badge";
+import { HolyshipBadge as Badge, stateVariant } from "@/components/ui/holyship-badge";
 import type { EntityHistory } from "@/lib/defcon-client";
 
 interface EntityTimelineProps {

@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { HolyshipBadge as Badge } from "@/components/ui/holyship-badge";
 import type { Source, Watch } from "@/lib/radar-client";
 
 interface SourcesPanelProps {
