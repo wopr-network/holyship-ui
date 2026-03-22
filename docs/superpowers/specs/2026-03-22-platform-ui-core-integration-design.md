@@ -133,7 +133,7 @@ holyship-ui uses `DEFCON_ADMIN_TOKEN` (Bearer header) for all server-side API ca
 - **Session:** HttpOnly cookie-based sessions (better-auth standard)
 - **Tenant:** org = tenant. GitHub user creates/joins org. `X-Tenant-Id` header on all API calls.
 - **Server-side proxies:** Keep `DEFCON_ADMIN_TOKEN` for `api/defcon/` and `api/radar/` proxy routes (these are internal, not user-facing)
-- **Middleware:** `src/middleware.ts` (Next.js standard location) — adapted from platform-ui-core's `proxy.ts` pattern. Protects `(dashboard)` routes, redirects unauthenticated to `/login`.
+- **Middleware:** `src/proxy.ts` — adapted from wopr-platform-ui's `proxy.ts` pattern (Next.js picks it up via `export const config = { matcher }`). Protects `(dashboard)` routes, redirects unauthenticated to `/login`.
 
 ### Auth flow
 1. User hits holyship-ui → middleware checks session cookie
