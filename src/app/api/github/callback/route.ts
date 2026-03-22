@@ -5,7 +5,7 @@ import {
   createIntegration,
   listIntegrations,
   updateIntegrationCredentials,
-} from "@/lib/defcon-client";
+} from "@/lib/holyship-client";
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");

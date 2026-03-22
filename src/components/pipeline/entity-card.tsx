@@ -4,7 +4,7 @@ import {
   modelTierVariant,
   stateVariant,
 } from "@/components/ui/holyship-badge";
-import type { Entity, FlowState } from "@/lib/defcon-client";
+import type { Entity, FlowState } from "@/lib/holyship-client";
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime();

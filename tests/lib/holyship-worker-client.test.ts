@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/config", () => ({
-  RADAR_URL: "http://test-radar",
+  RADAR_URL: "http://test-holyship",
 }));
 
-import { getEntityActivity } from "@/lib/radar-client";
+import { getEntityActivity } from "@/lib/holyship-worker-client";
 
 describe("getEntityActivity", () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe("getEntityActivity", () => {
     expect(result).toEqual(mockPage);
 
     const [url] = fetchSpy.mock.calls[0];
-    expect(url).toBe("http://test-radar/api/entities/e1/activity?since=0");
+    expect(url).toBe("http://test-holyship/api/entities/e1/activity?since=0");
   });
 
   it("passes since parameter", async () => {
@@ -47,7 +47,7 @@ describe("getEntityActivity", () => {
     await getEntityActivity("e1", 5);
 
     const [url] = fetchSpy.mock.calls[0];
-    expect(url).toBe("http://test-radar/api/entities/e1/activity?since=5");
+    expect(url).toBe("http://test-holyship/api/entities/e1/activity?since=5");
   });
 
   it("throws on non-ok response", async () => {
@@ -56,6 +56,6 @@ describe("getEntityActivity", () => {
       status: 500,
     } as Response);
 
-    await expect(getEntityActivity("e1")).rejects.toThrow("RADAR 500");
+    await expect(getEntityActivity("e1")).rejects.toThrow("Holyship 500");
   });
 });

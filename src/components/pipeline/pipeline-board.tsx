@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
-import type { Entity, Flow } from "@/lib/defcon-client";
-import type { DefconConnectionStatus, DefconEvent } from "@/lib/defcon-ws";
-// DefconConnectionStatus used in handleWsStatus param type
-import { useDefconEvents } from "@/lib/defcon-ws";
+import type { Entity, Flow } from "@/lib/holyship-client";
+import type { HolyshipConnectionStatus, HolyshipEvent } from "@/lib/holyship-ws";
+// HolyshipConnectionStatus used in handleWsStatus param type
+import { useHolyshipEvents } from "@/lib/holyship-ws";
 import { StateColumn } from "./state-column";
 
 interface BoardState {
@@ -27,8 +27,10 @@ export function PipelineBoard({ initial }: PipelineBoardProps) {
 
   const refreshEntities = useCallback(async () => {
     try {
-      const { getDefconStatus, getFlows, getEntitiesByState } = await import("@/lib/defcon-client");
-      const [status, flows] = await Promise.all([getDefconStatus(), getFlows()]);
+      const { getHolyshipStatus, getFlows, getEntitiesByState } = await import(
+        "@/lib/holyship-client"
+      );
+      const [status, flows] = await Promise.all([getHolyshipStatus(), getFlows()]);
       const entityMap: Record<string, Entity[]> = {};
       await Promise.all(
         flows.flatMap((flow) =>
@@ -56,7 +58,7 @@ export function PipelineBoard({ initial }: PipelineBoardProps) {
   }, [refreshEntities]);
 
   const handleWsEvent = useCallback(
-    (event: DefconEvent) => {
+    (event: HolyshipEvent) => {
       if (
         event.type === "entity.transitioned" ||
         event.type === "entity.created" ||
@@ -68,14 +70,14 @@ export function PipelineBoard({ initial }: PipelineBoardProps) {
     [refreshEntities],
   );
 
-  const handleWsStatus = useCallback((status: DefconConnectionStatus) => {
+  const handleWsStatus = useCallback((status: HolyshipConnectionStatus) => {
     if (status === "open") setWsStatus("live");
     else if (status === "error") setWsStatus("error");
     else if (status === "closed") setWsStatus("closed");
     else setWsStatus("connecting");
   }, []);
 
-  useDefconEvents(handleWsEvent, handleWsStatus);
+  useHolyshipEvents(handleWsEvent, handleWsStatus);
 
   const flows = board.flows;
 

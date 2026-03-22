@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { ActivityItem } from "@/lib/radar-client";
-import { getEntityActivity } from "@/lib/radar-client";
+import type { ActivityItem } from "@/lib/holyship-worker-client";
+import { getEntityActivity } from "@/lib/holyship-worker-client";
 
 const POLL_INTERVAL_MS = 3000;
 const TERMINAL_STATES = new Set(["done", "failed", "cancelled"]);

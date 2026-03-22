@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { EventLogEntry } from "@/lib/radar-client";
+import type { EventLogEntry } from "@/lib/holyship-worker-client";
 
 const PAGE_SIZE = 20;
 

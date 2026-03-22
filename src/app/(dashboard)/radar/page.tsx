@@ -1,20 +1,20 @@
-import type { RadarState } from "@/components/radar/radar-panel";
-import { RadarPanel } from "@/components/radar/radar-panel";
-import { logger } from "@/lib/logger";
-import type { EventLogEntry, Source, Watch } from "@/lib/radar-client";
+import type { HolyshipState } from "@/components/holyship/holyship-panel";
+import { HolyshipPanel } from "@/components/holyship/holyship-panel";
+import type { EventLogEntry, Source, Watch } from "@/lib/holyship-worker-client";
 import {
   getEventLog,
   getSlotPool,
   getSources,
   getSourceWatches,
   getWorkers,
-} from "@/lib/radar-client";
+} from "@/lib/holyship-worker-client";
+import { logger } from "@/lib/logger";
 
-const log = logger("radar-page");
+const log = logger("holyship-page");
 
 export const dynamic = "force-dynamic";
 
-export default async function RadarPage() {
+export default async function WorkersPage() {
   const [poolResult, workersResult, eventsResult, sourcesResult] = await Promise.allSettled([
     getSlotPool(),
     getWorkers(),
@@ -24,7 +24,7 @@ export default async function RadarPage() {
 
   for (const result of [poolResult, workersResult, eventsResult, sourcesResult]) {
     if (result.status === "rejected") {
-      log.error("radar upstream failure", result.reason);
+      log.error("holyship upstream failure", result.reason);
     }
   }
 
@@ -46,7 +46,7 @@ export default async function RadarPage() {
     }
   }
 
-  const initial: RadarState = {
+  const initial: HolyshipState = {
     pool,
     workers,
     events,
@@ -62,13 +62,13 @@ export default async function RadarPage() {
           className="text-sm font-bold tracking-[0.3em] uppercase"
           style={{ color: "var(--foreground)" }}
         >
-          Radar
+          Workers
         </h1>
         <span className="text-xs tracking-wider" style={{ color: "var(--muted-foreground)" }}>
           / detection &amp; dispatch
         </span>
       </div>
-      <RadarPanel initial={initial} />
+      <HolyshipPanel initial={initial} />
     </div>
   );
 }

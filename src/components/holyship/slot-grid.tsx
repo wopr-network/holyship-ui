@@ -1,4 +1,4 @@
-import type { Slot } from "@/lib/radar-client";
+import type { Slot } from "@/lib/holyship-worker-client";
 
 const DEAD_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
 

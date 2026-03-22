@@ -1,4 +1,4 @@
-import type { Entity, FlowState } from "@/lib/defcon-client";
+import type { Entity, FlowState } from "@/lib/holyship-client";
 import { EntityCard } from "./entity-card";
 
 interface StateColumnProps {

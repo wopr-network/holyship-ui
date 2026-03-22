@@ -1,4 +1,4 @@
-import { createEntity } from "@/lib/defcon-client";
+import { createEntity } from "@/lib/holyship-client";
 import { logger } from "@/lib/logger";
 import { loadSourcesConfig } from "./config";
 import { isValidCron, lastCronFireTime, nextCronFireTime } from "./cron-parser";

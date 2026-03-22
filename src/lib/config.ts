@@ -1,10 +1,10 @@
-// Silo connection
-export const SILO_URL = process.env.SILO_URL ?? "http://localhost:3001";
-export const SILO_ADMIN_TOKEN = process.env.SILO_ADMIN_TOKEN ?? "";
-// Browser-side WebSocket URL — must be set to the publicly reachable silo WS endpoint
-export const SILO_WS_URL = process.env.NEXT_PUBLIC_SILO_WS_URL ?? "";
-// Browser-side WS token — separate from server-side SILO_ADMIN_TOKEN
-export const SILO_WS_TOKEN = process.env.NEXT_PUBLIC_SILO_WS_TOKEN ?? "";
+// Holyship API connection
+export const HOLYSHIP_API_URL = process.env.HOLYSHIP_API_URL ?? "http://localhost:3001";
+export const HOLYSHIP_API_TOKEN = process.env.HOLYSHIP_API_TOKEN ?? "";
+// Browser-side WebSocket URL — must be set to the publicly reachable WS endpoint
+export const HOLYSHIP_WS_URL = process.env.NEXT_PUBLIC_HOLYSHIP_WS_URL ?? "";
+// Browser-side WS token — separate from server-side HOLYSHIP_API_TOKEN
+export const HOLYSHIP_WS_TOKEN = process.env.NEXT_PUBLIC_HOLYSHIP_WS_TOKEN ?? "";
 export const GITHUB_BASE_URL = "https://github.com/";
 export const LINEAR_BASE_URL = "https://linear.app/wopr/issue/";
 export const SOURCES_CONFIG_PATH = process.env.SOURCES_CONFIG_PATH ?? "./holyship.sources.json";

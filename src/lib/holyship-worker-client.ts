@@ -1,7 +1,7 @@
-import { SILO_ADMIN_TOKEN, SILO_URL, WOPR_TENANT_ID } from "./config";
+import { HOLYSHIP_API_TOKEN, HOLYSHIP_API_URL, WOPR_TENANT_ID } from "./config";
 import { logger } from "./logger";
 
-const log = logger("radar-client");
+const log = logger("holyship-worker-client");
 
 export type SlotStatus = "idle" | "claiming" | "working";
 
@@ -30,10 +30,10 @@ export interface SlotPool {
 
 function resolveUrl(path: string): string {
   if (typeof window === "undefined") {
-    return `${SILO_URL}${path}`;
+    return `${HOLYSHIP_API_URL}${path}`;
   }
-  // Browser: proxy through the existing defcon Next.js proxy
-  return path.replace(/^\/api\//, "/api/defcon/");
+  // Browser: proxy through the existing holyship Next.js proxy
+  return path.replace(/^\/api\//, "/api/holyship/");
 }
 
 async function fetchJson<T>(path: string): Promise<T> {
@@ -42,12 +42,12 @@ async function fetchJson<T>(path: string): Promise<T> {
   const headers: Record<string, string> = {};
   if (isServerSide) {
     headers["X-Tenant-Id"] = WOPR_TENANT_ID;
-    if (SILO_ADMIN_TOKEN) headers.Authorization = `Bearer ${SILO_ADMIN_TOKEN}`;
+    if (HOLYSHIP_API_TOKEN) headers.Authorization = `Bearer ${HOLYSHIP_API_TOKEN}`;
   }
   const res = await fetch(url, { next: { revalidate: 0 }, headers });
   if (!res.ok) {
     log.error(`GET ${url} → ${res.status}`);
-    throw new Error(`Silo ${res.status}: ${path}`);
+    throw new Error(`Holyship ${res.status}: ${path}`);
   }
   return res.json() as Promise<T>;
 }
@@ -107,7 +107,7 @@ export interface EventLogEntry {
   watch_id: string | null;
   raw_event: unknown;
   action_taken: string | null;
-  defcon_response: unknown;
+  holyship_response: unknown;
   created_at: number;
 }
 

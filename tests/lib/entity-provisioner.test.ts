@@ -14,14 +14,14 @@ function validateWorktreePathReal(base: string, subpath: string): string {
 }
 
 vi.mock("@/lib/config", () => ({
-	DEFCON_URL: "http://localhost:3001",
-	DEFCON_ADMIN_TOKEN: "",
+	HOLYSHIP_URL: "http://localhost:3001",
+	HOLYSHIP_ADMIN_TOKEN: "",
 	WORKTREE_BASE: "/tmp/holyship-worktrees",
 	HOLYSHIP_REPO_PATH: "/repos/wopr",
 	requireHolyshipRepoPath: () => "/repos/wopr",
 }));
 
-vi.mock("@/lib/defcon-client", () => ({
+vi.mock("@/lib/holyship-client", () => ({
 	createEntity: vi.fn(),
 	reportSignal: vi.fn(),
 }));
@@ -33,7 +33,7 @@ vi.mock("@/lib/github-worktree", () => ({
 }));
 
 import { cleanupEntityWorktree, provisionGitHubEntity } from "@/lib/entity-provisioner";
-import { createEntity, reportSignal } from "@/lib/defcon-client";
+import { createEntity, reportSignal } from "@/lib/holyship-client";
 import { createWorktree, removeWorktree, validateWorktreePath } from "@/lib/github-worktree";
 
 const mockCreateEntity = vi.mocked(createEntity);
@@ -91,7 +91,7 @@ describe("provisionGitHubEntity", () => {
 		expect(result.worktree.branch).toBe("feature/WOP-123");
 	});
 
-	it("signals failure to defcon if worktree creation fails", async () => {
+	it("signals failure to holyship if worktree creation fails", async () => {
 		mockCreateWorktree.mockRejectedValue(new Error("git failed"));
 
 		await expect(
