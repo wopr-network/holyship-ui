@@ -1,5 +1,16 @@
 import { HOLYSHIP_API_TOKEN, HOLYSHIP_API_URL, WOPR_TENANT_ID } from "./config";
 import { logger } from "./logger";
+import type {
+  AuditCategory,
+  AuditResult,
+  CreatedIssue,
+  DesignedFlow,
+  FlowApplyResponse,
+  FlowEditResponse,
+  FlowResponse,
+  Gap,
+  RepoConfig,
+} from "./types";
 
 const log = logger("holyship-client");
 
@@ -228,5 +239,133 @@ export async function updateIntegrationCredentials(
 export async function deleteIntegration(id: string): Promise<void> {
   await fetchJson<unknown>(`/api/admin/integrations/${encodeURIComponent(id)}`, {
     method: "DELETE",
+  });
+}
+
+// ─── Repo Interrogation & Config ─────────────────────────────────────────────
+
+const REPO_BASE = "/api";
+const REPO_TIMEOUT = 30_000;
+
+/** Browser-side request helper for the repo-config proxy API */
+async function repoRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${REPO_BASE}${path}`, {
+    ...init,
+    signal: init?.signal ?? AbortSignal.timeout(REPO_TIMEOUT),
+    headers: { "Content-Type": "application/json", ...init?.headers },
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`API ${res.status}: ${text.slice(0, 200)}`);
+  }
+  return res.json() as Promise<T>;
+}
+
+export function interrogateRepo(owner: string, repo: string) {
+  return repoRequest<{
+    repoConfigId: string;
+    repo: string;
+    description: string;
+    languages: string[];
+    gapCount: number;
+    gaps: { capability: string; title: string; priority: string }[];
+    hasClaudeMd: boolean;
+  }>(`/repos/${owner}/${repo}/interrogate`, { method: "POST" });
+}
+
+export async function getRepoConfig(owner: string, repo: string) {
+  try {
+    return await repoRequest<{
+      id: string;
+      config: RepoConfig;
+      claudeMd: string | null;
+    }>(`/repos/${owner}/${repo}/config`);
+  } catch {
+    return null;
+  }
+}
+
+export async function getRepoGaps(owner: string, repo: string) {
+  const r = await repoRequest<{ repo: string; gaps: Gap[] }>(`/repos/${owner}/${repo}/gaps`);
+  return r.gaps;
+}
+
+// ─── Gap Actualization ───
+
+export function createIssueFromGap(
+  owner: string,
+  repo: string,
+  gapId: string,
+  createEntity = false,
+) {
+  return repoRequest<CreatedIssue>(`/repos/${owner}/${repo}/gaps/${gapId}/create-issue`, {
+    method: "POST",
+    body: JSON.stringify({ create_entity: createEntity }),
+  });
+}
+
+export function createAllIssues(owner: string, repo: string, createEntity = false) {
+  return repoRequest<{ repo: string; created: number; issues: CreatedIssue[] }>(
+    `/repos/${owner}/${repo}/gaps/create-all`,
+    {
+      method: "POST",
+      body: JSON.stringify({ create_entity: createEntity }),
+    },
+  );
+}
+
+// ─── Audit ───
+
+export function runAudit(
+  owner: string,
+  repo: string,
+  categories: AuditCategory[],
+  customInstructions?: string,
+) {
+  return repoRequest<AuditResult>(`/repos/${owner}/${repo}/audit`, {
+    method: "POST",
+    body: JSON.stringify({
+      categories,
+      custom_instructions: customInstructions,
+    }),
+  });
+}
+
+// ─── Flow Design ───
+
+export function designFlow(owner: string, repo: string) {
+  return repoRequest<DesignedFlow>(`/repos/${owner}/${repo}/design-flow`, {
+    method: "POST",
+  });
+}
+
+// ─── Flow Editor ───
+
+export async function getFlow(owner: string, repo: string) {
+  try {
+    return await repoRequest<FlowResponse>(`/repos/${owner}/${repo}/flow`);
+  } catch {
+    return null;
+  }
+}
+
+export function editFlow(owner: string, repo: string, message: string, currentYaml: string) {
+  return repoRequest<FlowEditResponse>(`/repos/${owner}/${repo}/flow/edit`, {
+    method: "POST",
+    body: JSON.stringify({ message, currentYaml }),
+    signal: AbortSignal.timeout(60_000),
+  });
+}
+
+export function applyFlow(
+  owner: string,
+  repo: string,
+  yaml: string,
+  commitMessage: string,
+  baseSha: string,
+) {
+  return repoRequest<FlowApplyResponse>(`/repos/${owner}/${repo}/flow/apply`, {
+    method: "POST",
+    body: JSON.stringify({ yaml, commitMessage, baseSha }),
   });
 }
