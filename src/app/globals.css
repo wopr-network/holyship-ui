@@ -4,3 +4,27 @@
 @source "../../node_modules/@wopr-network/platform-ui-core/src/app";
 /* biome-ignore lint/correctness/noInvalidPositionAtImportRule: @source must precede @import for Tailwind v4 to scan core's source files */
 @import "../../node_modules/@wopr-network/platform-ui-core/src/app/globals.css";
+
+/* Holy Ship brand overrides — signal orange on black */
+.dark {
+  --primary: #ff6600;
+  --primary-foreground: #000000;
+  --accent: #1a0d00;
+  --accent-foreground: #ff6600;
+  --ring: #ff6600;
+  --sidebar-primary: #ff6600;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1a0d00;
+  --sidebar-accent-foreground: #ff8833;
+  --chart-1: #ff6600;
+  --chart-2: #ff8833;
+  --chart-3: #cc5200;
+  --chart-4: #ff9955;
+  --chart-5: #993d00;
+}
+
+:root {
+  --primary: #ff6600;
+  --primary-foreground: #ffffff;
+  --ring: #ff6600;
+}
