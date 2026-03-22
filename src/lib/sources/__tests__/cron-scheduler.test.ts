@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CronSourceConfig } from "../types";
 
-// Mock defcon-client before importing scheduler
-vi.mock("@/lib/defcon-client", () => ({
+// Mock holyship-client before importing scheduler
+vi.mock("@/lib/holyship-client", () => ({
   createEntity: vi.fn().mockResolvedValue({ id: "ent-1" }),
 }));
 
@@ -11,7 +11,7 @@ vi.mock("../config", () => ({
   loadSourcesConfig: vi.fn(),
 }));
 
-import { createEntity } from "@/lib/defcon-client";
+import { createEntity } from "@/lib/holyship-client";
 import { loadSourcesConfig } from "../config";
 import { CronScheduler } from "../cron-scheduler";
 

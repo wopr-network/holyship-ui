@@ -1,7 +1,7 @@
 import { HOLYSHIP_API_TOKEN, HOLYSHIP_API_URL, WOPR_TENANT_ID } from "./config";
 import { logger } from "./logger";
 
-const log = logger("defcon-client");
+const log = logger("holyship-client");
 
 export interface FlowState {
   id: string;
@@ -49,7 +49,7 @@ export interface Entity {
   updatedAt: string;
 }
 
-export interface DefconStatus {
+export interface HolyshipStatus {
   flows: Record<string, Record<string, number>>;
   activeInvocations: number;
   pendingClaims: number;
@@ -67,12 +67,12 @@ function authHeaders(): Record<string, string> {
 }
 
 function resolveUrl(path: string): string {
-  // Server-side: call silo directly. Browser-side: proxy through Next.js API route.
+  // Server-side: call holyship API directly. Browser-side: proxy through Next.js API route.
   if (typeof window === "undefined") {
     return `${HOLYSHIP_API_URL}${path}`;
   }
   // path is like /api/status or /api/entities?... — strip /api/ prefix for proxy route
-  return path.replace(/^\/api\//, "/api/defcon/");
+  return path.replace(/^\/api\//, "/api/holyship/");
 }
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
@@ -93,7 +93,7 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
     });
     if (!res.ok) {
       log.error(`${method} ${url} → ${res.status}`);
-      throw new Error(`DEFCON ${res.status}: ${path}`);
+      throw new Error(`HOLYSHIP ${res.status}: ${path}`);
     }
     if (res.status === 204 || res.headers.get("content-length") === "0") {
       return undefined as T;
@@ -107,8 +107,8 @@ async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
   }
 }
 
-export async function getDefconStatus(): Promise<DefconStatus> {
-  return fetchJson<DefconStatus>("/api/status");
+export async function getHolyshipStatus(): Promise<HolyshipStatus> {
+  return fetchJson<HolyshipStatus>("/api/status");
 }
 
 export async function getFlows(): Promise<Flow[]> {
@@ -142,7 +142,7 @@ export async function createEntity(
   });
   if (!res.ok) {
     log.error(`POST ${url} → ${res.status}`);
-    throw new Error(`DEFCON ${res.status}: POST /api/entities`);
+    throw new Error(`HOLYSHIP ${res.status}: POST /api/entities`);
   }
   return res.json() as Promise<Entity>;
 }
@@ -163,7 +163,7 @@ export async function reportSignal(
   });
   if (!res.ok) {
     log.error(`POST ${url} → ${res.status}`);
-    throw new Error(`DEFCON ${res.status}: POST /api/entities/${entityId}/report`);
+    throw new Error(`HOLYSHIP ${res.status}: POST /api/entities/${entityId}/report`);
   }
 }
 

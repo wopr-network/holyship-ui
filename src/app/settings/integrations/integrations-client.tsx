@@ -2,12 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { Integration, IntegrationCategory, IntegrationProvider } from "@/lib/defcon-client";
+import type { Integration, IntegrationCategory, IntegrationProvider } from "@/lib/holyship-client";
 import {
   createIntegration,
   deleteIntegration,
   updateIntegrationCredentials,
-} from "@/lib/defcon-client";
+} from "@/lib/holyship-client";
 
 interface Props {
   github: Integration | null;

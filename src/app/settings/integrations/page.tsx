@@ -6,7 +6,7 @@ import {
   GITHUB_APP_INSTALL_URL,
   LINEAR_CLIENT_ID,
 } from "@/lib/config";
-import { listIntegrations } from "@/lib/defcon-client";
+import { listIntegrations } from "@/lib/holyship-client";
 import { IntegrationsClient } from "./integrations-client";
 
 export const dynamic = "force-dynamic";

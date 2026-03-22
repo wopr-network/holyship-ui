@@ -4,16 +4,16 @@ import { useEffect, useRef } from "react";
 import { HOLYSHIP_WS_TOKEN, HOLYSHIP_WS_URL } from "./config";
 import { logger } from "./logger";
 
-const log = logger("defcon-ws");
+const log = logger("holyship-ws");
 
-export type DefconEventType =
+export type HolyshipEventType =
   | "entity.created"
   | "entity.transitioned"
   | "entity.updated"
   | "entity.claimed";
 
-export interface DefconEvent {
-  type: DefconEventType;
+export interface HolyshipEvent {
+  type: HolyshipEventType;
   payload: Record<string, unknown>;
 }
 
@@ -25,11 +25,11 @@ function getWsUrl(): string {
   return HOLYSHIP_WS_URL;
 }
 
-export type DefconConnectionStatus = "connecting" | "open" | "closed" | "error";
+export type HolyshipConnectionStatus = "connecting" | "open" | "closed" | "error";
 
-export function useDefconEvents(
-  handler: (event: DefconEvent) => void,
-  onStatusChange?: (status: DefconConnectionStatus) => void,
+export function useHolyshipEvents(
+  handler: (event: HolyshipEvent) => void,
+  onStatusChange?: (status: HolyshipConnectionStatus) => void,
 ): void {
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
@@ -60,7 +60,7 @@ export function useDefconEvents(
 
       ws.addEventListener("message", (ev) => {
         try {
-          const data = JSON.parse(ev.data as string) as DefconEvent;
+          const data = JSON.parse(ev.data as string) as HolyshipEvent;
           handlerRef.current(data);
         } catch {
           log.warn("ws message parse error");

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { HolyshipBadgeVariant as BadgeVariant } from "@/components/ui/holyship-badge";
 import { HolyshipBadge as Badge } from "@/components/ui/holyship-badge";
-import type { Worker } from "@/lib/radar-client";
+import type { Worker } from "@/lib/holyship-worker-client";
 
 function workerStatusVariant(status: string): BadgeVariant {
   const s = status.toLowerCase();
@@ -36,7 +36,7 @@ export function WorkerList({ workers, onDrainToggle }: WorkerListProps) {
     try {
       const action = isDrained ? "undrain" : "drain";
       const res = await fetch(
-        `/api/defcon/admin/workers/${encodeURIComponent(workerId)}/${action}`,
+        `/api/holyship/admin/workers/${encodeURIComponent(workerId)}/${action}`,
         { method: "POST" },
       );
       if (res.ok) {

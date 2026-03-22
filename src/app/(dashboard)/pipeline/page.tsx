@@ -1,6 +1,6 @@
 import { PipelineBoard } from "@/components/pipeline/pipeline-board";
-import type { Entity } from "@/lib/defcon-client";
-import { getDefconStatus, getEntitiesByState, getFlows } from "@/lib/defcon-client";
+import type { Entity } from "@/lib/holyship-client";
+import { getEntitiesByState, getFlows, getHolyshipStatus } from "@/lib/holyship-client";
 
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ export default async function PipelinePage() {
   const entityMap: Record<string, Entity[]> = {};
 
   try {
-    [flows, { flows: counts }] = await Promise.all([getFlows(), getDefconStatus()]);
+    [flows, { flows: counts }] = await Promise.all([getFlows(), getHolyshipStatus()]);
     await Promise.all(
       flows.flatMap((flow) =>
         flow.states.map(async (state) => {

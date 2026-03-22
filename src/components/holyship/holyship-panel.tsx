@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { EventLogEntry, SlotPool, Source, Watch, Worker } from "@/lib/radar-client";
+import type { EventLogEntry, SlotPool, Source, Watch, Worker } from "@/lib/holyship-worker-client";
 import {
   getEventLog,
   getSlotPool,
   getSources,
   getSourceWatches,
   getWorkers,
-} from "@/lib/radar-client";
+} from "@/lib/holyship-worker-client";
 import { EventLogPanel } from "./event-log";
 import { SlotGrid } from "./slot-grid";
 import { SourcesPanel } from "./sources-panel";
@@ -16,7 +16,7 @@ import { WorkerList } from "./worker-list";
 
 const POLL_INTERVAL = 10_000;
 
-export interface RadarState {
+export interface HolyshipState {
   pool: SlotPool;
   workers: Worker[];
   events: EventLogEntry[];
@@ -25,7 +25,7 @@ export interface RadarState {
   degraded: boolean;
 }
 
-async function fetchRadarState(): Promise<RadarState> {
+async function fetchHolyshipState(): Promise<HolyshipState> {
   const [poolRes, workersRes, eventsRes, sourcesRes] = await Promise.allSettled([
     getSlotPool(),
     getWorkers(),
@@ -55,18 +55,18 @@ async function fetchRadarState(): Promise<RadarState> {
   return { pool, workers, events, sources, watchesBySource, degraded };
 }
 
-interface RadarPanelProps {
-  initial: RadarState;
+interface HolyshipPanelProps {
+  initial: HolyshipState;
 }
 
-export function RadarPanel({ initial }: RadarPanelProps) {
-  const [state, setState] = useState<RadarState>(initial);
+export function HolyshipPanel({ initial }: HolyshipPanelProps) {
+  const [state, setState] = useState<HolyshipState>(initial);
 
   const refresh = useCallback(() => {
-    fetchRadarState()
+    fetchHolyshipState()
       .then(setState)
       .catch(() => {
-        // ignore fetch errors — degraded state handled by fetchRadarState
+        // ignore fetch errors — degraded state handled by fetchHolyshipState
       });
   }, []);
 

@@ -6,7 +6,7 @@ import { EntityTimeline } from "@/components/entity/entity-timeline";
 import { Card } from "@/components/ui/card";
 import { HolyshipBadge as Badge, stateVariant } from "@/components/ui/holyship-badge";
 import { GITHUB_BASE_URL, LINEAR_BASE_URL } from "@/lib/config";
-import { getEntity } from "@/lib/defcon-client";
+import { getEntity } from "@/lib/holyship-client";
 
 export const dynamic = "force-dynamic";
 

@@ -1,12 +1,12 @@
 import path from "node:path";
 import { requireHolyshipRepoPath, WORKTREE_BASE } from "./config";
-import { createEntity, type Entity, type EntityRefs, reportSignal } from "./defcon-client";
 import {
   createWorktree,
   removeWorktree,
   validateWorktreePath,
   type WorktreeResult,
 } from "./github-worktree";
+import { createEntity, type Entity, type EntityRefs, reportSignal } from "./holyship-client";
 import { logger } from "./logger";
 
 const log = logger("entity-provisioner");

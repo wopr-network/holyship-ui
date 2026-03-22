@@ -22,7 +22,7 @@ export function Nav() {
       </Link>
       <nav className="flex items-center gap-6 ml-4">
         <NavLink href="/pipeline">Pipeline</NavLink>
-        <NavLink href="/radar">Radar</NavLink>
+        <NavLink href="/holyship">Workers</NavLink>
         <NavLink href="/settings/integrations">Settings</NavLink>
       </nav>
     </header>

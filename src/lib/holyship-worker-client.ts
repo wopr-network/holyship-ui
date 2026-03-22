@@ -1,7 +1,7 @@
 import { HOLYSHIP_API_TOKEN, HOLYSHIP_API_URL, WOPR_TENANT_ID } from "./config";
 import { logger } from "./logger";
 
-const log = logger("radar-client");
+const log = logger("holyship-worker-client");
 
 export type SlotStatus = "idle" | "claiming" | "working";
 
@@ -32,8 +32,8 @@ function resolveUrl(path: string): string {
   if (typeof window === "undefined") {
     return `${HOLYSHIP_API_URL}${path}`;
   }
-  // Browser: proxy through the existing defcon Next.js proxy
-  return path.replace(/^\/api\//, "/api/defcon/");
+  // Browser: proxy through the existing holyship Next.js proxy
+  return path.replace(/^\/api\//, "/api/holyship/");
 }
 
 async function fetchJson<T>(path: string): Promise<T> {
@@ -107,7 +107,7 @@ export interface EventLogEntry {
   watch_id: string | null;
   raw_event: unknown;
   action_taken: string | null;
-  defcon_response: unknown;
+  holyship_response: unknown;
   created_at: number;
 }
 

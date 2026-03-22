@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/config", () => ({
-	DEFCON_URL: process.env.DEFCON_URL ?? "http://test-defcon",
-	DEFCON_ADMIN_TOKEN: "test-token",
+	HOLYSHIP_URL: process.env.HOLYSHIP_URL ?? "http://test-holyship",
+	HOLYSHIP_ADMIN_TOKEN: "test-token",
 }));
 
-import { createEntity, reportSignal } from "@/lib/defcon-client";
+import { createEntity, reportSignal } from "@/lib/holyship-client";
 
 describe("createEntity", () => {
 	beforeEach(() => {
@@ -23,7 +23,7 @@ describe("createEntity", () => {
 		expect(result).toEqual(mockEntity);
 
 		const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-		expect(url).toBe("http://test-defcon/api/entities");
+		expect(url).toBe("http://test-holyship/api/entities");
 		expect(opts.method).toBe("POST");
 		expect(JSON.parse(opts.body)).toEqual({
 			flow: "my-flow",
@@ -37,7 +37,7 @@ describe("createEntity", () => {
 			status: 500,
 		});
 
-		await expect(createEntity("my-flow")).rejects.toThrow("DEFCON 500");
+		await expect(createEntity("my-flow")).rejects.toThrow("HOLYSHIP 500");
 	});
 });
 
@@ -59,7 +59,7 @@ describe("reportSignal", () => {
 		});
 
 		const [url, opts] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-		expect(url).toBe("http://test-defcon/api/entities/e1/report");
+		expect(url).toBe("http://test-holyship/api/entities/e1/report");
 		expect(opts.method).toBe("POST");
 		const body = JSON.parse(opts.body);
 		expect(body.signal).toBe("provisioned");
