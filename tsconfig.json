@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*", "./node_modules/@wopr-network/platform-ui-core/src/*"],
       "@core/*": ["./node_modules/@wopr-network/platform-ui-core/src/*"]
     }
   },
@@ -31,5 +31,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "e2e", "playwright.config.ts"]
 }

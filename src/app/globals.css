@@ -1,3 +1,6 @@
-@source "../../node_modules/@wopr-network/platform-ui-core/src";
+@source "../../node_modules/@wopr-network/platform-ui-core/src/components";
+@source "../../node_modules/@wopr-network/platform-ui-core/src/lib";
+@source "../../node_modules/@wopr-network/platform-ui-core/src/hooks";
+@source "../../node_modules/@wopr-network/platform-ui-core/src/app";
 /* biome-ignore lint/correctness/noInvalidPositionAtImportRule: @source must precede @import for Tailwind v4 to scan core's source files */
 @import "../../node_modules/@wopr-network/platform-ui-core/src/app/globals.css";

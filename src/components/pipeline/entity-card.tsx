@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { Badge, modelTierVariant, stateVariant } from "@/components/ui/badge";
+import {
+  HolyshipBadge as Badge,
+  modelTierVariant,
+  stateVariant,
+} from "@/components/ui/holyship-badge";
 import type { Entity, FlowState } from "@/lib/defcon-client";
 
 function timeAgo(dateStr: string): string {

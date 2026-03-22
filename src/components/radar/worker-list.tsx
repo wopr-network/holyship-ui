@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { BadgeVariant } from "@/components/ui/badge";
-import { Badge } from "@/components/ui/badge";
+import type { HolyshipBadgeVariant as BadgeVariant } from "@/components/ui/holyship-badge";
+import { HolyshipBadge as Badge } from "@/components/ui/holyship-badge";
 import type { Worker } from "@/lib/radar-client";
 
 function workerStatusVariant(status: string): BadgeVariant {
