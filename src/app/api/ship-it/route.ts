@@ -26,9 +26,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const repoFullName = `${resolvedOwner}/${resolvedRepo}`;
-
-    const res = await fetch(`${HOLYSHIP_API_URL}/api/entities`, {
+    const res = await fetch(`${HOLYSHIP_API_URL}/api/ship-it`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,13 +34,10 @@ export async function POST(req: Request) {
         ...(HOLYSHIP_API_TOKEN ? { Authorization: `Bearer ${HOLYSHIP_API_TOKEN}` } : {}),
       },
       body: JSON.stringify({
+        owner: resolvedOwner,
+        repo: resolvedRepo,
+        issueNumber: resolvedIssueNumber,
         flow: "engineering",
-        refs: { github: { repo: repoFullName } },
-        payload: {
-          issueNumber: resolvedIssueNumber,
-          issueTitle: `Issue #${resolvedIssueNumber}`,
-          repoFullName,
-        },
       }),
     });
 
