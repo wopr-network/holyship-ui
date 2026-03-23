@@ -244,8 +244,8 @@ export async function deleteIntegration(id: string): Promise<void> {
 
 // ─── Repo Interrogation & Config ─────────────────────────────────────────────
 
-const REPO_BASE = "/api";
-const REPO_TIMEOUT = 30_000;
+const REPO_BASE = "/api/holyship";
+const REPO_TIMEOUT = 120_000;
 
 /** Browser-side request helper for the repo-config proxy API */
 async function repoRequest<T>(path: string, init?: RequestInit): Promise<T> {
