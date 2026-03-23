@@ -22,14 +22,21 @@ export default function DashboardPage() {
         const enriched = await Promise.all(
           raw.map(async (r) => {
             const [owner, repo] = r.full_name.split("/");
-            const configResult = await getRepoConfig(owner, repo);
-            const analyzed = configResult !== null;
+            let analyzed = false;
+            let config = null;
+            try {
+              const configResult = await getRepoConfig(owner, repo);
+              analyzed = configResult !== null;
+              config = configResult?.config ?? null;
+            } catch {
+              // config fetch failed — show repo anyway
+            }
             return {
               id: r.id,
               full_name: r.full_name,
               name: r.name,
               analyzed,
-              config: configResult?.config ?? null,
+              config,
               inFlight: 0,
               shippedToday: 0,
               openGaps: 0,
