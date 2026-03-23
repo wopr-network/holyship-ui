@@ -19,33 +19,53 @@ export default function DashboardPage() {
         const data = await res.json();
         const raw: { id: number; full_name: string; name: string }[] = data.repositories ?? [];
 
-        const enriched = await Promise.all(
-          raw.map(async (r) => {
-            const [owner, repo] = r.full_name.split("/");
-            let analyzed = false;
-            let config = null;
-            try {
-              const configResult = await getRepoConfig(owner, repo);
-              analyzed = configResult !== null;
-              config = configResult?.config ?? null;
-            } catch {
-              // config fetch failed — show repo anyway
-            }
-            return {
-              id: r.id,
-              full_name: r.full_name,
-              name: r.name,
-              analyzed,
-              config,
-              inFlight: 0,
-              shippedToday: 0,
-              openGaps: 0,
-            } satisfies RepoSummary;
-          }),
-        );
+        // Phase 1: show repos immediately (no enrichment)
+        const initial: RepoSummary[] = raw.map((r) => ({
+          id: r.id,
+          full_name: r.full_name,
+          name: r.name,
+          analyzed: false,
+          config: null,
+          inFlight: 0,
+          shippedToday: 0,
+          openGaps: 0,
+        }));
 
         if (!cancelled) {
-          setRepos(enriched);
+          setRepos(initial);
+          setLoading(false);
+        }
+
+        // Phase 2: enrich in background (5 at a time)
+        const BATCH = 5;
+        for (let i = 0; i < raw.length; i += BATCH) {
+          if (cancelled) break;
+          const batch = raw.slice(i, i + BATCH);
+          const results = await Promise.all(
+            batch.map(async (r) => {
+              const [owner, repo] = r.full_name.split("/");
+              try {
+                const configResult = await getRepoConfig(owner, repo);
+                return {
+                  id: r.id,
+                  analyzed: configResult !== null,
+                  config: configResult?.config ?? null,
+                };
+              } catch {
+                return { id: r.id, analyzed: false, config: null };
+              }
+            }),
+          );
+          if (!cancelled) {
+            setRepos((prev) =>
+              prev.map((repo) => {
+                const enriched = results.find((r) => r.id === repo.id);
+                return enriched
+                  ? { ...repo, analyzed: enriched.analyzed, config: enriched.config }
+                  : repo;
+              }),
+            );
+          }
         }
       } catch {
         // leave repos empty
