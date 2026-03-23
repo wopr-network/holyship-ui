@@ -31,11 +31,11 @@ export default async function EntityPage({ params }: EntityPageProps) {
     <div className="max-w-4xl mx-auto px-6 py-6">
       {/* Back */}
       <Link
-        href="/pipeline"
+        href="/dashboard"
         className="inline-flex items-center gap-1.5 text-xs mb-6 transition-opacity hover:opacity-70"
         style={{ color: "var(--muted-foreground)" }}
       >
-        ← Pipeline
+        ← Dashboard
       </Link>
 
       {/* Header */}

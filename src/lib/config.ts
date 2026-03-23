@@ -6,7 +6,7 @@ export const HOLYSHIP_WS_URL = process.env.NEXT_PUBLIC_HOLYSHIP_WS_URL ?? "";
 // Browser-side WS token — separate from server-side HOLYSHIP_API_TOKEN
 export const HOLYSHIP_WS_TOKEN = process.env.NEXT_PUBLIC_HOLYSHIP_WS_TOKEN ?? "";
 export const GITHUB_BASE_URL = "https://github.com/";
-export const LINEAR_BASE_URL = "https://linear.app/wopr/issue/";
+export const LINEAR_BASE_URL = `https://linear.app/${process.env.LINEAR_ORG ?? "wopr"}/issue/`;
 export const SOURCES_CONFIG_PATH = process.env.SOURCES_CONFIG_PATH ?? "./holyship.sources.json";
 export const WORKTREE_BASE = process.env.WORKTREE_BASE ?? "/tmp/holyship-worktrees";
 export const HOLYSHIP_REPO_PATH = process.env.HOLYSHIP_REPO_PATH ?? "";
@@ -17,8 +17,8 @@ export function requireHolyshipRepoPath(): string {
   return process.env.HOLYSHIP_REPO_PATH;
 }
 
-// Single-tenant: WOPR tenant ID
-export const WOPR_TENANT_ID = process.env.WOPR_TENANT_ID ?? "wopr";
+// Single-tenant ID (engine uses "default" in production)
+export const WOPR_TENANT_ID = process.env.TENANT_ID ?? process.env.WOPR_TENANT_ID ?? "default";
 
 // GitHub App OAuth
 export const GITHUB_APP_ID = process.env.GITHUB_APP_ID ?? "";

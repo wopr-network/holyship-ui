@@ -12,7 +12,7 @@ const tabs = [
   { label: "Issues", path: "" },
   { label: "Analyze", path: "/analyze" },
   { label: "Stories", path: "/stories" },
-  { label: "Pipeline", path: "/pipeline" },
+  { label: "Flow", path: "/pipeline" },
 ];
 
 export function RepoTabs({ owner, repo }: RepoTabsProps) {
